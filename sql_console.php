@@ -1,5 +1,7 @@
 <?php
 
+# This code is in the public domain.
+
 #
 # Configuration
 #
