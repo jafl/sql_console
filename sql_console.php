@@ -57,7 +57,10 @@ $s = $pdo->query('show databases');
 foreach ($s->fetchAll(PDO::FETCH_COLUMN, 0) as $name)
 {
 	$s1 = $pdo->query('show tables from '.$name);
-	$db_list[ $name ] = $s1->fetchAll(PDO::FETCH_COLUMN, 0);
+	if ($s1)
+	{
+		$db_list[ $name ] = $s1->fetchAll(PDO::FETCH_COLUMN, 0);
+	}
 }
 ?>
 <!DOCTYPE HTML>
