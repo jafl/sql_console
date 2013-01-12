@@ -149,11 +149,11 @@ foreach ($s->fetchAll(PDO::FETCH_COLUMN, 0) as $name)
 						foreach ($db_list as $name => $table_list)
 						{
 							echo '<li>';
-							echo '<div class="db-name">'.htmlspecialchars($name).'</div>';
+							echo '<div class="db-name">',htmlspecialchars($name),'</div>';
 							echo '<div><ul>';
 							foreach ($table_list as $table)
 							{
-								echo '<li>'.htmlspecialchars($table).'</li>';
+								echo '<li>',htmlspecialchars($table),'</li>';
 							}
 							echo '</ul></div>';
 							echo '</li>';
