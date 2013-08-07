@@ -9,3 +9,8 @@ The top of the file defines the configuration parameters required by the console
 * the maximum number of results to save in the output pane
 
 You must at least modify the database configuration to work with your setup.
+
+License
+-------
+
+BSD
