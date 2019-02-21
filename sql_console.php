@@ -8,12 +8,12 @@
 
 # database connection
 
-$db_config = array
-(
+$db_config =
+[
 	'url'  => 'mysql:host=127.0.0.1',
 	'user' => 'root',
 	'pass' => ''
-);
+];
 
 # maximum number of results to save in scrolling output pane
 
@@ -25,7 +25,7 @@ $line_buffer_length = 100;
 
 $pdo = new PDO(
 	$db_config['url'], $db_config['user'], $db_config['pass'],
-	array( PDO::ATTR_PERSISTENT => true ));
+	[ PDO::ATTR_PERSISTENT => true ]);
 $pdo->exec('SET CHARACTER SET utf8');
 
 if (isset($_POST['cmd']))
@@ -39,19 +39,19 @@ if (isset($_POST['cmd']))
 	if ($s === false)
 	{
 		$error  = $pdo->errorInfo();
-		$result = array( 'error' => $error[2] );
+		$result = [ 'error' => $error[2] ];
 	}
 	else
 	{
 		$result = $s->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	header('Content-type: application/json');
+	header('Content-type: application/json;charset=utf-8');
 	echo json_encode($result);
 	exit;
 }
 
-$db_list = array();
+$db_list = [];
 
 $s = $pdo->query('show databases');
 foreach ($s->fetchAll(PDO::FETCH_COLUMN, 0) as $name)
@@ -68,48 +68,39 @@ foreach ($s->fetchAll(PDO::FETCH_COLUMN, 0) as $name)
 <head>
 	<title>MySQL Console</title>
 
-	<script src="http://yui.yahooapis.com/3.8.0/build/yui/yui-min.js"></script>
+	<script src="http://jafl.github.io/yui3/build/yui/yui-min.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssreset/reset-min.css" />
-	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssfonts/fonts-min.css" />
-	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssbase/base-min.css" />
+	<link rel="stylesheet" type="text/css" href="http://jafl.github.io/yui3/build/cssreset/cssreset-min.css" />
+	<link rel="stylesheet" type="text/css" href="http://jafl.github.io/yui3/build/cssfonts/cssfonts-min.css" />
+	<link rel="stylesheet" type="text/css" href="http://jafl.github.io/yui3/build/cssbase/cssbase-min.css" />
 
 	<style type="text/css">
 	.yui3-js-enabled .yui3-widget-loading { visibility:hidden; position:absolute; top:-10000px; left:-10000px; }
 
-	.layout-hd,.layout-ft {text-align:center;}
-	.layout-hd h1 {font-size:150%;font-weight:bold;margin:0;padding:5px 0;}
+	.layout-hd { text-align:center; }
+	.layout-hd h1 { font-size:150%; font-weight:bold; margin:0; padding:5px 0; }
 
-	.layout-bd .layout-module-col {padding:0 5px;}
-	.layout-bd .layout-module {margin:5px 0;border-radius:10px;}
-	.layout-bd .layout-m-hd {background-color:#EEE;border-top-left-radius:10px;border-top-right-radius:10px;border-bottom:1px solid #666;}
-	.layout-bd .layout-m-ft {text-align:center;background-color:#EEE;border-top:1px solid #666;}
-	.layout-bd .layout-m-ft,
-	.layout-bd .layout-collapsed-vert .layout-m-hd {border-bottom-left-radius:10px;border-bottom-right-radius:10px;}
-	.layout-bd .layout-collapsed-vert .layout-m-hd {border-bottom:0;}
+	.layout-bd .layout-module-col { padding:0 5px; }
+	.layout-bd .layout-module { margin:5px 0; border-radius:10px; }
+	.layout-bd .layout-m-hd { background-color:#EEE; border-top-left-radius:10px; border-top-right-radius:10px; border-bottom:1px solid #666; }
+	.layout-bd .layout-collapsed-vert .layout-m-hd { border-bottom-left-radius:10px; border-bottom-right-radius:10px; }
+	.layout-bd .layout-collapsed-vert .layout-m-hd { border-bottom:0; }
 
 	.layout-bd .layout-m-hd,
-	.layout-bd .layout-m-bd,
-	.layout-bd .layout-m-ft {padding:5px;}
-
+	.layout-bd .layout-m-bd { padding:5px; }
 	.layout-bd .layout-m-hd { height:25px; }
+	.layout-bd .layout-m-hd p { margin:0; }
 
-	.layout-bd .layout-m-hd p,
-	.layout-bd .layout-m-ft p {margin:0}
+	.layout-bd .layout-collapsed-vert .layout-vert-expand-nub { display:inline; }
 
-	.layout-ft {background-color:#CCC;}
-	.layout-ft p {font-size:80%;color:#666;margin:0;padding:0 0 10px 0;}
-
-	.layout-bd .layout-collapsed-vert .layout-vert-expand-nub {display:inline;}
-
-	.layout-bd .layout-collapsed-vert .layout-vert-expand-nub {display:inline;}
+	.layout-bd .layout-collapsed-vert .layout-vert-expand-nub { display:inline; }
 	.layout-bd .layout-collapsed-horiz .layout-left-expand-nub,
-	.layout-bd .layout-collapsed-horiz .layout-right-expand-nub {cursor:pointer;background-color:#EEE;border-radius:10px;}
-	.layout-bd .layout-collapsed-horiz .layout-horiz-expand-icon {padding:20px 2px 2px 2px;}
+	.layout-bd .layout-collapsed-horiz .layout-right-expand-nub { cursor:pointer; background-color:#EEE; border-radius:10px; }
+	.layout-bd .layout-collapsed-horiz .layout-horiz-expand-icon { padding:20px 2px 2px 2px; }
 
 	#db-table-list-container { width:15em; }
 	#db-table-list-content { margin-left:0; }
-	.db-name { font-weight:bold; }
+	.db-name { font-weight:bold; cursor:pointer; }
 	#db-table-list .yui3-accordion-section ul { list-style-type:none; margin-left:1em; }
 
 	#cmd-module { height:4em; border:0; }
@@ -193,7 +184,10 @@ function(Y) {
 "use strict";
 
 var line_buffer_length = <?php echo json_encode($line_buffer_length); ?>,
-	current_db         = null;
+	current_db         = null,
+	cmd_input,
+	history            = [],
+	history_i          = 0;
 
 new Y.PageLayout();
 
@@ -219,7 +213,43 @@ Y.on('domready', function()
 	},
 	'#db-table-list-container', '.db-name');
 
-	Y.one('#cmd-input').on('key', sendCommand, 'enter');
+	cmd_input = Y.one('#cmd-input');
+
+	cmd_input.on('key', sendCommand, 'enter');
+
+	cmd_input.on('key', function(e)	// up
+	{
+		e.halt(true);
+
+		if (history.length == 0)
+		{
+			return;
+		}
+		else if (history_i === 0)
+		{
+			history[-1] = cmd_input.get('value');
+		}
+
+		history_i = Math.min(history.length, history_i+1);
+		cmd_input.set('value', history[ history.length - history_i ]);
+	},
+	'down:38');
+
+	cmd_input.on('key', function(e)	// down
+	{
+		e.halt(true);
+
+		if (history_i <= 1)
+		{
+			history_i       = 0;
+			cmd_input.set('value', history[-1] || '');
+			return;
+		}
+
+		history_i = Math.max(1, history_i-1);
+		cmd_input.set('value', history[ history.length - history_i ]);
+	},
+	'down:40');
 });
 
 function sendCommand(e)
@@ -265,6 +295,10 @@ function sendCommand(e)
 	{
 		e.target.set('value', '');
 	});
+
+	history.push(cmd_input.get('value'));
+	delete history[-1];
+	history_i = 0;
 }
 
 function showResult(msg, data, type)
